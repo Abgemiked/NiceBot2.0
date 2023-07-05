@@ -25,7 +25,7 @@ with open('wettericon.json') as config_file:
 
 TOKEN = cfg_json['TOKEN']
 ALLGEMEIN_ID = cfg_json['ALLGEMEIN_ID']
-OOF_ID = cfg_json['OOF_ID']
+OOF_ID = cfg_json['SPAM_CHANNEL_ID']
 GIF_ID = cfg_json['GIF_ID']
 LOG_CHANNEL_ID = cfg_json['LOG_CHANNEL_ID']
 MUSIC_CHANNEL_ID = cfg_json['MUSIC_CHANNEL_ID']
@@ -82,8 +82,8 @@ async def wetter(interaction: discord.Interaction, ort: str):
     await weather_cmd(cfg_json, interaction, ort)
 
 @tree.command(description="Servereinrichtung anpassen")
-async def einstellungen(interaction: discord.Interaction, allgemein_channel: discord.TextChannel=None, oof_channel: discord.TextChannel=None, gif_channel: discord.TextChannel=None, log_channel: discord.TextChannel=None, musiccommand_channel: discord.TextChannel=None, temp_template_channel: discord.VoiceChannel=None, botcommand_channel: discord.TextChannel=None, adminrole: discord.Role=None, botrole: discord.Role=None, picture_channel: discord.TextChannel=None, api_key_weather: str=None,base_url: str=None, geonames_username: str=None):
-    await settings_cmd(interaction, allgemein_channel, oof_channel, gif_channel, log_channel, musiccommand_channel, temp_template_channel, botcommand_channel, adminrole, botrole, picture_channel, api_key_weather, base_url, geonames_username)
+async def einstellungen(interaction: discord.Interaction, allgemein_channel: discord.TextChannel=None, spam_channel: discord.TextChannel=None, keyword: str=None, gif_channel: discord.TextChannel=None, log_channel: discord.TextChannel=None, musiccommand_channel: discord.TextChannel=None, temp_template_channel: discord.VoiceChannel=None, botcommand_channel: discord.TextChannel=None, adminrole: discord.Role=None, botrole: discord.Role=None, picture_channel: discord.TextChannel=None, api_key_weather: str=None,base_url: str=None, geonames_username: str=None):
+    await settings_cmd(interaction, allgemein_channel, spam_channel, keyword, gif_channel, log_channel, musiccommand_channel, temp_template_channel, botcommand_channel, adminrole, botrole, picture_channel, api_key_weather, base_url, geonames_username)
 
 @tree.command(description="Zeigt die aktuellen Nutzer ohne Bots an")
 async def serverstats(interaction: discord.Interaction):
