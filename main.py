@@ -1,6 +1,7 @@
 import json
 import discord
 import asyncio
+import sqlite3
 from discord.ext import commands
 from discord_interactions import verify_key_decorator, InteractionType
 from discord import app_commands
@@ -13,11 +14,15 @@ from commands.com_cmds.weather_cmd import handler as weather_cmd
 from commands.team_cmds.settings_cmd import handler as settings_cmd
 from commands.com_cmds.serverstats import handler as serverstats_cmd
 from commands.help_cmd import handler as hilfe_cmd
+from commands.com_cmds.ranklist_cmd import handler as ranklist_cmd
+from commands.com_cmds.rank_cmd import handler as rank_cmd
+from commands.team_cmds.rankgive_cmd import handler as rankgive_cmd
 from events.message_event import handler as message_handler
 from events.logs.delete_log import on_raw_message_delete_handler
 from events.logs.leave_log import on_member_remove_handler
 from events.temp_channel.voice_temp import on_voice_state_update_handler
 from events.statistic_channel.statistic import update_statistics
+
 with open('./config.json', 'r', encoding= "utf-8") as f:
     cfg_json = json.load(f)
 with open('wettericon.json') as config_file:
@@ -36,6 +41,7 @@ TEMP_CHANNEL_ID = cfg_json['TEMP_CHANNEL_ID']
 ALLOWED_ROLE_IDS = cfg_json['ALLOWED_ROLE_IDS']
 IGNORED_ROLE_ID = cfg_json['IGNORED_ROLE_ID']
 GUILD_ID = cfg_json['GUILD_ID']
+APPLICATION_ID = cfg_json['APPLICATION_ID']
 API_KEY = cfg_json['API_KEY']
 BASE_URL = cfg_json['BASE_URL']
 GEONAMES_API_USERNAME = cfg_json['GEONAMES_API_USERNAME']
@@ -44,6 +50,39 @@ weather_icons = wettericon["weather_icons"]
 intents = discord.Intents(65419)
 bot = discord.Client(intents=intents)
 tree = app_commands.CommandTree(bot)
+
+db = sqlite3.connect('level_system.db')
+cursor = db.cursor()
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS users (
+        user_id INTEGER PRIMARY KEY,
+        exp INTEGER DEFAULT 0,
+        level INTEGER DEFAULT 1
+    )
+''')
+db.commit()
+
+def calculate_exp(level):
+    if level <= 5:
+        return 100
+    elif level <= 15:
+        return 100
+    elif level <= 25:
+        return 125
+    elif level <= 50:
+        return 250
+    elif level <= 75:
+        return 375
+    elif level <= 100:
+        return 500
+    elif level <= 125:
+        return 625
+    elif level <= 150:
+        return 750
+    elif level <= 175:
+        return 875
+    else:
+        return 1000
 
 @bot.event
 async def on_ready():
@@ -57,6 +96,7 @@ async def update_statistics_loop():
         if guild:
             asyncio.create_task(update_statistics(cfg_json, guild))
         await asyncio.sleep(300)
+
 @tree.command(description="Frag nach Hilfe")
 async def hilfe(interaction: discord.Interaction):
     await hilfe_cmd(interaction)
@@ -89,10 +129,42 @@ async def einstellungen(interaction: discord.Interaction, allgemein_channel: dis
 async def serverstats(interaction: discord.Interaction):
     await serverstats_cmd(interaction)
 
+@tree.command(description="Zeigt die Rangliste des Levelsystem an")
+async def rangliste(interaction: discord.Interaction):
+    await ranklist_cmd(interaction)
+
+@tree.command(description="Zeigt den Rang des angegebenen Users an")
+
+async def rang(interaction: discord.Interaction, rang_user: discord.Member=None):
+    await rank_cmd(interaction, rang_user)
+@tree.command(description="Gibt einem Benutzer ein bestimmte Level")
+async def rang_geben(interaction: discord.Interaction, rang_user_give: discord.Member, lvl: int):
+    await rankgive_cmd(interaction, rang_user_give, lvl)
 @bot.event
 async def on_message(message):
     await message_handler(cfg_json, message)
-
+@bot.event
+async def on_message(message):
+    if message.author.bot:
+        return
+    user_id = message.author.id
+    cursor.execute('SELECT exp, level FROM users WHERE user_id = ?', (user_id,))
+    result = cursor.fetchone()
+    
+    if result:
+        exp, level = result
+        exp += 1
+        
+        required_exp = calculate_exp(level)
+        if exp >= required_exp:
+            level += 1
+            exp = 0
+            await message.channel.send(f'Glückwunsch, {message.author.mention}! Du hast Level {level} erreicht!')
+        cursor.execute('UPDATE users SET exp = ?, level = ? WHERE user_id = ?', (exp, level, user_id))
+    else:
+        cursor.execute('INSERT INTO users (user_id) VALUES (?)', (user_id,))
+    
+    db.commit()
 @bot.event
 async def on_raw_message_delete(payload):
     await on_raw_message_delete_handler(payload, bot, LOG_CHANNEL_ID, MUSIC_CHANNEL_ID, ALLOWED_ROLE_IDS)
