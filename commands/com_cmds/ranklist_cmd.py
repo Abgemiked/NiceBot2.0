@@ -15,8 +15,9 @@ db.commit()
 async def handler(interaction: discord.Interaction):
     await interaction.response.defer()
     bot = interaction.client
-    cursor.execute('SELECT user_id, exp, level FROM users ORDER BY exp DESC LIMIT 20')
+    cursor.execute('SELECT user_id, exp, level FROM users ORDER BY level DESC LIMIT 20')
     result = cursor.fetchall()
+    result.reverse()
 
     embed = discord.Embed(title='Rangliste', color=discord.Color.gold())
     for row in result:
