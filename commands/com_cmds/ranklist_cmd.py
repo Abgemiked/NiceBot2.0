@@ -17,8 +17,6 @@ async def handler(interaction: discord.Interaction):
     bot = interaction.client
     cursor.execute('SELECT user_id, exp, level FROM users ORDER BY level DESC LIMIT 20')
     result = cursor.fetchall()
-    result.reverse()
-
     embed = discord.Embed(title='Rangliste', color=discord.Color.gold())
     for row in result:
         user_id, exp, level = row
