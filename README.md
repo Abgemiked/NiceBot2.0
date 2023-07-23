@@ -3,30 +3,25 @@
 NiceBot is an allinclusive Discordbot(Python)   
 
 ## Channel
-```
+`
 Temporary voice channel -> serves as access to the temporary voice channel
-
 Statistics channel      -> shows members without bots
-```
+`
 ## Filter
-```
+`
 Spamchannel     -> deletes everything except a certain word
-
 GIF channel     -> deletes everything except GIFs
-
 Picture channel -> deletes everything except pictures & replies to pictures
-
 Bot commands    -> deletes everything except "/" commands
-
-```
+`
+``
 If a message is deleted by a filter, the sender receives a DM with the explanation:
-
 "Your message from "Abgemiked's Gang -> oof" has been deleted, please do not send messages there. 
-
 The channel is only for the word "oof"." (An example of the "oof channel")
+``
 
 ## Commands
-```
+`
 /wetter  -> shows you the weather for the location of your choice
 /rang        -> shows your current level with experience points
 /rangliste   -> shows the 20 highest members depending on their level
@@ -38,10 +33,10 @@ The channel is only for the word "oof"." (An example of the "oof channel")
 /rang_geben    -> gives a lvl to an user
 /streamer -> Creating a category, based on a template, for a specific user
 /streamer_löschen -> Deletes a category of a streamer
+`
 ```
-`
 Some of the commands needs one or more specific value to use it
-`
+```
 ## Support
 
 This bot is not distributed, so support is available rather sporadically. 
