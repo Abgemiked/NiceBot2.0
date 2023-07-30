@@ -38,7 +38,7 @@ PICTURE_CHANNEL_ID = cfg_json['PICTURE_CHANNEL_ID']
 BOT_CHANNEL_ID = cfg_json['BOT_CHANNEL_ID']
 BLOCKED_CHANNEL_IDS = cfg_json['BLOCKED_CHANNEL_IDS']
 TEMP_CHANNEL_ID = cfg_json['TEMP_CHANNEL_ID']
-LEAVE_LOG_CHANNEL_ID = cfg_json['LEAVE_LOG_CHANNEL_ID']
+LEAVE_CHANNEL_ID = cfg_json['LEAVE_CHANNEL_ID']
 ALLOWED_ROLE_IDS = cfg_json['ALLOWED_ROLE_IDS']
 IGNORED_ROLE_ID = cfg_json['IGNORED_ROLE_ID']
 GUILD_ID = cfg_json['GUILD_ID']
@@ -172,7 +172,7 @@ async def on_raw_message_delete(payload):
 
 @bot.event
 async def on_member_remove(member):
-    await on_member_remove_handler(member, bot, LEAVE_LOG_CHANNEL_ID)
+    await on_member_remove_handler(member, bot, LEAVE_CHANNEL_ID)
 
 @bot.event
 async def on_voice_state_update(member, before, after):
