@@ -164,7 +164,6 @@ async def on_message(message):
         cursor.execute('UPDATE users SET exp = ?, level = ? WHERE user_id = ?', (exp, level, user_id))
     else:
         cursor.execute('INSERT INTO users (user_id) VALUES (?)', (user_id,))
-    
     db.commit()
 @bot.event
 async def on_raw_message_delete(payload):
