@@ -158,9 +158,10 @@ async def on_message(message):
         
         required_exp = calculate_exp(level)
         if exp >= required_exp:
+            bot_channel = bot.get_channel(cfg_json['BOT_CHANNEL_ID'])
             level += 1
             exp = 0
-            await message.channel.send(f'Glückwunsch, {message.author.mention}! Du hast Level {level} erreicht!')
+            await bot_channel.send(f'Glückwunsch, {message.author.mention}! Du hast Level {level} erreicht!')
         cursor.execute('UPDATE users SET exp = ?, level = ? WHERE user_id = ?', (exp, level, user_id))
     else:
         cursor.execute('INSERT INTO users (user_id) VALUES (?)', (user_id,))
