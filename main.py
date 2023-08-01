@@ -141,11 +141,10 @@ async def rang(interaction: discord.Interaction, rang_user: discord.Member=None)
 @tree.command(description="Gibt einem Benutzer ein bestimmte Level")
 async def rang_geben(interaction: discord.Interaction, rang_user_give: discord.Member, lvl: int):
     await rankgive_cmd(interaction, rang_user_give, lvl)
+
 @bot.event
 async def on_message(message):
     await message_handler(cfg_json, message)
-@bot.event
-async def on_message(message):
     if message.author.bot:
         return
     user_id = message.author.id
@@ -166,6 +165,7 @@ async def on_message(message):
     else:
         cursor.execute('INSERT INTO users (user_id) VALUES (?)', (user_id,))
     db.commit()
+
 @bot.event
 async def on_raw_message_delete(payload):
     await on_raw_message_delete_handler(payload, bot, LOG_CHANNEL_ID, MUSIC_CHANNEL_ID, ALLOWED_ROLE_IDS)
