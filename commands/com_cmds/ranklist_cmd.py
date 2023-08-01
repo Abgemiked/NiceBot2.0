@@ -21,6 +21,10 @@ async def handler(interaction: discord.Interaction):
     for row in result:
         user_id, exp, level = row
         user = bot.get_user(user_id)
-        embed.add_field(name=f'{user.name} (Level {level})', value=f'Erfahrungspunkte: {exp}', inline=False)
-    
+        if user:
+            embed.add_field(name=f'{user.name} (Level {level})', value=f'Erfahrungspunkte: {exp}', inline=False)
+        else:
+            embed.add_field(name=f'Unbekannter Nutzer (Level {level})', value=f'Erfahrungspunkte: {exp}', inline=False)
+
     await interaction.edit_original_response(embed=embed)
+
