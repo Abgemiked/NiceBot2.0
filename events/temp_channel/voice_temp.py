@@ -76,10 +76,10 @@ async def handle_empty_temp_channels(guild):
     TEMP_CATEGORY_ID = cfg_json["TEMP_CATEGORY_ID"]
     TEMP_CHANNEL_ID = cfg_json["TEMP_CHANNEL_ID"]
 
-    temp_category = guild.get_channel(TEMP_CATEGORY_ID)
+    temp_category = discord.utils.get(guild.categories, id=TEMP_CATEGORY_ID)
     
-    for channel in temp_category.voice_channels:
-        if channel.id != TEMP_CHANNEL_ID and len(channel.members) == 0:
+    for channel in temp_category.channels:
+        if isinstance(channel, discord.VoiceChannel) and channel.id != TEMP_CHANNEL_ID and len(channel.members) == 0:
             await channel.delete()
 
 async def on_voice_state_update_handler(member, before, after, guild):

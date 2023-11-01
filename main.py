@@ -22,7 +22,7 @@ from events.logs.delete_log import on_raw_message_delete_handler
 from events.logs.leave_log import on_member_remove_handler
 from events.temp_channel.voice_temp import on_voice_state_update_handler
 from events.statistic_channel.statistic import update_statistics
-
+from events.temp_channel.voice_temp import handle_empty_temp_channels
 with open('./config.json', 'r', encoding= "utf-8") as f:
     cfg_json = json.load(f)
 with open('wettericon.json') as config_file:
@@ -177,6 +177,8 @@ async def on_member_remove(member):
 @bot.event
 async def on_voice_state_update(member, before, after):
     guild = member.guild
+    if before.channel and before.channel.category_id == cfg_json["TEMP_CATEGORY_ID"]:
+        await handle_empty_temp_channels(guild)
     await on_voice_state_update_handler(member, before, after, guild)
 
 
