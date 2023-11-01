@@ -176,6 +176,8 @@ async def on_member_remove(member):
 
 @bot.event
 async def on_voice_state_update(member, before, after):
-    await on_voice_state_update_handler(member, before, after)
+    guild = member.guild
+    await on_voice_state_update_handler(member, before, after, guild)
+
 
 bot.run(cfg_json["TOKEN"])
