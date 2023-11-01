@@ -15,7 +15,7 @@ async def handle_voice_temp(member, before, after):
         await temp_channel.set_permissions(
             member,  
             view_channel = True,
-            manage_channels = False,
+            manage_channels = True,
             manage_permissions = False,
             manage_webhooks = False,
             create_instant_invite = True,
@@ -72,11 +72,16 @@ async def handle_voice_temp(member, before, after):
             use_application_commands = False,
             manage_events = False
         )
-    if before.channel is not None and before.channel.id != TEMP_CHANNEL_ID and len(before.channel.members) == 0:
-        temp_channel = discord.utils.get(member.guild.voice_channels, name=member.name.capitalize())
-        if temp_channel is not None and before.channel == temp_channel:
-            await before.channel.delete()
+async def handle_empty_temp_channels(guild):
+    TEMP_CATEGORY_ID = cfg_json["TEMP_CATEGORY_ID"]
+    TEMP_CHANNEL_ID = cfg_json["TEMP_CHANNEL_ID"]
 
+    temp_category = guild.get_channel(TEMP_CATEGORY_ID)
+    
+    for channel in temp_category.voice_channels:
+        if channel.id != TEMP_CHANNEL_ID and len(channel.members) == 0:
+            await channel.delete()
 
-async def on_voice_state_update_handler(member, before, after):
+async def on_voice_state_update_handler(member, before, after, guild):
     await handle_voice_temp(member, before, after)
+    await handle_empty_temp_channels(guild)
