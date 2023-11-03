@@ -25,7 +25,7 @@ async def handler(interaction: discord.Interaction, allgemein_channel: discord.T
             data['BOT_CHANNEL_ID'] = botcommand_channel.id
         if temp_template_channel is not None:
             data['TEMP_CHANNEL_ID'] = temp_template_channel.id
-        if temp_template_channel is not None:
+        if temp_category is not None:
             data['TEMP_CATEGORY_ID'] = temp_category.id
         if adminrole is not None:
             data['ALLOWED_ROLE_IDS'] = adminrole.id
