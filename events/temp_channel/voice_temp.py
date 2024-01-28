@@ -7,7 +7,7 @@ with open('./config.json', 'r', encoding= "utf-8") as f:
 async def handle_voice_temp(member, before, after):
     TEMP_CHANNEL_ID = cfg_json["TEMP_CHANNEL_ID"]
     temp_channel = member.guild.get_channel(TEMP_CHANNEL_ID)
-    if after.channel is not None and after.channel.id == TEMP_CHANNEL_ID and temp_channel is None:
+    if after.channel is not None and after.channel.id == TEMP_CHANNEL_ID:
         guild = member.guild
         channel_name = member.name.capitalize()
         category = after.channel.category
@@ -16,7 +16,7 @@ async def handle_voice_temp(member, before, after):
         await temp_channel.set_permissions(
             member,  
             view_channel = True,
-            manage_channels = True,
+            manage_channels = False,
             manage_permissions = False,
             manage_webhooks = False,
             create_instant_invite = True,
@@ -73,6 +73,10 @@ async def handle_voice_temp(member, before, after):
             use_application_commands = False,
             manage_events = False
         )
+    if before.channel is not None and before.channel.id != TEMP_CHANNEL_ID and len(before.channel.members) == 0:
+        temp_channel = discord.utils.get(member.guild.voice_channels, name=member.name.capitalize())
+        if temp_channel is not None and before.channel == temp_channel:
+            await before.channel.delete()
 async def handle_empty_temp_channels(guild):
     TEMP_CATEGORY_ID = cfg_json["TEMP_CATEGORY_ID"]
     TEMP_CHANNEL_ID = cfg_json["TEMP_CHANNEL_ID"]
