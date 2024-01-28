@@ -16,7 +16,7 @@ async def handle_voice_temp(member, before, after):
         await temp_channel.set_permissions(
             member,  
             view_channel = True,
-            manage_channels = False,
+            manage_channels = True,
             manage_permissions = False,
             manage_webhooks = False,
             create_instant_invite = True,
